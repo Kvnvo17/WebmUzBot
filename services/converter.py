@@ -56,12 +56,13 @@ def _tmp(suffix: str) -> str:
     d = tempfile.gettempdir()
     return os.path.join(d, f"{uuid.uuid4().hex}{suffix}")
 
-
 async def mp4_to_webm(src: str) -> Optional[str]:
     dst = _tmp(".webm")
     code, _, err = await _run([
         "ffmpeg", "-y",
         "-i", src,
+        "-vf", "scale=512:512:force_original_aspect_ratio=decrease,"
+               "pad=512:512:(ow-iw)/2:(oh-ih)/2:color=black",
         "-c:v", "libvpx-vp9",
         "-b:v", "0", "-crf", "32",
         "-an",
@@ -72,9 +73,8 @@ async def mp4_to_webm(src: str) -> Optional[str]:
         print("ffmpeg error:", err.decode("utf-8", errors="ignore"))
         return None
     return dst
-
-
-async def webm_to_mp4(src: str) -> Optional[str]:
+    
+async async webm_to_mp4(src: str) -> Optional[str]:
     dst = _tmp(".mp4")
     code, _, err = await _run([
         "ffmpeg", "-y",
