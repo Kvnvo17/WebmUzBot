@@ -107,21 +107,15 @@ async def handle_mp4(message: Message, state: FSMContext, bot: Bot):
 
         w, h, dur = info
 
-        # O'lcham tekshiruvi (1 piksel tolerantlik)
-        if abs(w - 512) > 1 or abs(h - 512) > 1:
-            await message.answer(
-                f"❌ Video o‘lchami 512×512 bo‘lishi kerak.\n"
-                f"📐 Sizning video: {w}×{h}"
-            )
-            return
+        w, h, dur = info
 
-        # Davomiylik tekshiruvi
-        if dur > 3.05:
-            await message.answer(
-                f"❌ Video 3 soniyadan uzun bo‘lmasligi kerak.\n"
-                f"⏱ Sizning video: {dur:.2f} soniya"
-            )
-            return
+# Davomiylik tekshiruvi
+if dur > 3.05:
+    await message.answer(
+        f"❌ Video 3 soniyadan uzun bo‘lmasligi kerak.\n"
+        f"⏱ Sizning video: {dur:.2f} soniya"
+    )
+    return
 
         await message.answer(t(lang, "CONVERTING"))
 
