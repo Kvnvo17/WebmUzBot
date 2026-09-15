@@ -74,7 +74,7 @@ async def mp4_to_webm(src: str) -> Optional[str]:
         return None
     return dst
     
-async async webm_to_mp4(src: str) -> Optional[str]:
+async def webm_to_mp4(src: str) -> Optional[str]:
     dst = _tmp(".mp4")
     code, _, err = await _run([
         "ffmpeg", "-y",
