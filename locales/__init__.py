@@ -1,4 +1,4 @@
-from locales import uz, ru, en
+from . import uz, ru, en
 
 LOCALES = {"uz": uz, "ru": ru, "en": en}
 
