@@ -56,8 +56,6 @@ async def _download(bot: Bot, file_id: str, suffix: str):
         return None
 
 
-# ---------------- MP4 -> WEBM ----------------
-
 @router.message(ConvState.wait_mp4, F.video | F.document)
 async def handle_mp4(message: Message, state: FSMContext, bot: Bot):
     lang = await db.get_user_lang(message.from_user.id)
@@ -99,15 +97,11 @@ async def handle_mp4(message: Message, state: FSMContext, bot: Bot):
 
         info = await conv.get_video_info(src)
         if not info:
-            await message.answer(
-                "❌ Videoni o‘qib bo‘lmadi.\n"
-                "Fayl buzuq yoki noto‘g‘ri format."
-            )
+            await message.answer("❌ Videoni o‘qib bo‘lmadi.")
             return
 
         w, h, dur = info
 
-        # Davomiylik tekshiruvi (o'lcham tekshirilmaydi - avtomatik resize qilinadi)
         if dur > 3.05:
             await message.answer(
                 f"❌ Video 3 soniyadan uzun bo‘lmasligi kerak.\n"
@@ -150,8 +144,6 @@ async def handle_mp4(message: Message, state: FSMContext, bot: Bot):
     finally:
         conv.safe_remove(src, dst)
 
-
-# ---------------- WEBM -> MP4 ----------------
 
 @router.message(ConvState.wait_webm, F.video | F.document)
 async def handle_webm(message: Message, state: FSMContext, bot: Bot):
@@ -222,8 +214,6 @@ async def handle_webm(message: Message, state: FSMContext, bot: Bot):
     finally:
         conv.safe_remove(src, dst)
 
-
-# ---------------- Noto'g'ri fayl ----------------
 
 @router.message(ConvState.wait_mp4)
 async def wrong_mp4(message: Message):
