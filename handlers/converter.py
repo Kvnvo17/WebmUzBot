@@ -107,15 +107,13 @@ async def handle_mp4(message: Message, state: FSMContext, bot: Bot):
 
         w, h, dur = info
 
-        w, h, dur = info
-
-# Davomiylik tekshiruvi
-if dur > 3.05:
-    await message.answer(
-        f"❌ Video 3 soniyadan uzun bo‘lmasligi kerak.\n"
-        f"⏱ Sizning video: {dur:.2f} soniya"
-    )
-    return
+        # Davomiylik tekshiruvi (o'lcham tekshirilmaydi - avtomatik resize qilinadi)
+        if dur > 3.05:
+            await message.answer(
+                f"❌ Video 3 soniyadan uzun bo‘lmasligi kerak.\n"
+                f"⏱ Sizning video: {dur:.2f} soniya"
+            )
+            return
 
         await message.answer(t(lang, "CONVERTING"))
 
@@ -130,7 +128,6 @@ if dur > 3.05:
         await message.answer_video(FSInputFile(dst), caption=t(lang, "DONE"))
         await db.inc_stat("mp4_to_webm")
 
-        # Log kanal
         log_id = await db.get_setting("log_channel")
         if log_id:
             try:
@@ -203,7 +200,6 @@ async def handle_webm(message: Message, state: FSMContext, bot: Bot):
         await message.answer_video(FSInputFile(dst), caption=t(lang, "DONE"))
         await db.inc_stat("webm_to_mp4")
 
-        # Log kanal
         log_id = await db.get_setting("log_channel")
         if log_id:
             try:
